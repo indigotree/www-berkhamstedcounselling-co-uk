@@ -1,0 +1,36 @@
+{
+	"config": {},
+	"modules": {},
+	"env": {
+		"develop": {
+			"config": {},
+			"modules": {
+				"Search": {
+					"config": {
+						"searchwp-license-key": "092c0c368c7ad96bf7293319a60ca6b9"
+					}
+				}
+			}
+		},
+		"staging": {
+			"config": {},
+			"modules": {
+				"Search": {
+					"config": {
+						"searchwp-license-key": "092c0c368c7ad96bf7293319a60ca6b9"
+					}
+				}
+			}
+		},
+		"production": {
+			"config": {},
+			"modules": {
+				"Search": {
+					"config": {
+						"searchwp-license-key": "092c0c368c7ad96bf7293319a60ca6b9"
+					}
+				}
+			}
+		}
+	}
+}

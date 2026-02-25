@@ -1,0 +1,205 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+name: Deploy to WP Engine
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - staging
+            - develop
+
+env:
+    DEV_BRANCH: develop
+    STG_BRANCH: staging
+    PRD_BRANCH: main
+    DEV_ENV: berkhamcounsdev
+    STG_ENV: berkhamcounsstg
+    PRD_ENV: berkhamcouns
+
+jobs:
+    check-project:
+        name: Pre-deploy checks
+        runs-on: ubuntu-latest
+        env:
+            DEV_ENV_SECRET: ${{ secrets.DEV_ENV }}
+            STG_ENV_SECRET: ${{ secrets.STG_ENV }}
+            PRD_ENV_SECRET: ${{ secrets.PRD_ENV }}
+        steps:
+            - name: Check this is a client project
+              if: github.repository == 'indigotree/platform-skeleton'
+              run: exit 1
+            - name: Check project has its environment name set
+              if: contains(env.DEV_ENV, 'CHANGE_ME') || contains(env.STG_ENV, 'CHANGE_ME') || contains(env.PRD_ENV, 'CHANGE_ME')
+              run: exit 1
+            - name: Check deployment targets match GitHub configuration
+              if: env.DEV_ENV != env.DEV_ENV_SECRET || env.STG_ENV != env.STG_ENV_SECRET || env.PRD_ENV != env.PRD_ENV_SECRET
+              run: exit 1
+
+    deploy:
+        name: Deploy
+        needs: check-project
+        concurrency: ${{ github.ref_name }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node JS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+                  cache: "npm"
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.2"
+                  tools: composer:v2
+                  coverage: none
+
+            - name: Install Dependencies (JS)
+              run: npm ci
+
+            - name: Install Dependencies (PHP)
+              uses: ramsey/composer-install@v2
+              env:
+                  COMPOSER_AUTH: ${{ secrets.PLATFORM_COMPOSER_AUTH }}
+              with:
+                  composer-options: "--no-dev --optimize-autoloader"
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Create release on Github
+              id: create_deployment
+              uses: octokit/request-action@v2.x
+              with:
+                  route: POST /repos/{repository}/deployments
+                  repository: ${{ github.repository }}
+                  ref: ${{ github.ref_name }}
+                  environment: ${{ github.ref_name == 'main' && 'production' || github.ref_name }}
+                  auto_merge: false
+                  required_contexts: "[]"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+            - name: Set deployment status to in progress
+              id: start_deployment
+              uses: octokit/request-action@v2.x
+              with:
+                  route: POST /repos/{repository}/deployments/{deployment}/statuses
+                  repository: ${{ github.repository }}
+                  deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+                  environment: ${{ github.ref_name == 'main' && 'production' || github.ref_name }}
+                  log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  description: Deploying ${{ github.sha }} to the ${{ github.ref_name }} environment.
+                  state: in_progress
+                  required_contexts: "[]"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+            - name: Deploy plugins
+              uses: indigotree/github-action-deploy-to-wpe@v0.4.0
+              with:
+                  # Deploy vars
+                  CACHE_CLEAR: FALSE
+                  FLAGS: "-azvr --inplace --verbose --ignore-existing --exclude-from=.deployignore"
+                  WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+
+                  # PATHS:
+                  TPO_SRC_PATH: "wp-content/plugins"
+                  TPO_PATH: "wp-content"
+
+                  # Branches & environments
+                  DEV_BRANCH: ${{ env.DEV_BRANCH }}
+                  STG_BRANCH: ${{ env.STG_BRANCH }}
+                  PRD_BRANCH: ${{ env.PRD_BRANCH }}
+                  DEV_ENV: ${{ env.DEV_ENV }}
+                  STG_ENV: ${{ env.STG_ENV }}
+                  PRD_ENV: ${{ env.PRD_ENV }}
+
+            - name: Deploy (modules)
+              uses: indigotree/github-action-deploy-to-wpe@v0.4.0
+              with:
+                  # Deploy vars
+                  CACHE_CLEAR: FALSE
+                  FLAGS: "-azvr --inplace --verbose --delete --delete-delay --exclude-from=.deployignore"
+                  WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+
+                  # PATHS:
+                  TPO_SRC_PATH: "wp-content/platform"
+                  TPO_PATH: "wp-content"
+
+                  # Branches & environments
+                  DEV_BRANCH: ${{ env.DEV_BRANCH }}
+                  STG_BRANCH: ${{ env.STG_BRANCH }}
+                  PRD_BRANCH: ${{ env.PRD_BRANCH }}
+                  DEV_ENV: ${{ env.DEV_ENV }}
+                  STG_ENV: ${{ env.STG_ENV }}
+                  PRD_ENV: ${{ env.PRD_ENV }}
+
+            - name: Deploy (theme, and everything else)
+              uses: indigotree/github-action-deploy-to-wpe@v0.4.0
+              with:
+                  # Deploy vars
+                  CACHE_CLEAR: FALSE
+                  FLAGS: >-
+                      -azvr --inplace --verbose
+                      --exclude-from=.deployignore
+                      --exclude='/*.*'
+                      --exclude=_wpeprivate/
+                      --exclude=wp-admin/
+                      --exclude=wp-includes/
+                      --exclude=wp-content/plugins/
+                      --exclude=wp-content/platform/
+                      --exclude=wp-content/mu-plugins/
+                      --exclude=wp-content/uploads/
+                      --exclude=wp-content/upgrade*/
+                      --exclude=wp-content/drop-ins/
+                      --exclude=wp-content/languages/
+                      --exclude=mysql.sql
+                      --include='/wp-content/themes/'
+                      --include='/wp-content/themes/indigotree-theme-2025/***'
+                      --exclude='/wp-content/themes/*'
+                  WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+                  # PATHS:
+                  TPO_SRC_PATH: "."
+                  TPO_PATH: ""
+
+                  # Branches & environments
+                  DEV_BRANCH: ${{ env.DEV_BRANCH }}
+                  STG_BRANCH: ${{ env.STG_BRANCH }}
+                  PRD_BRANCH: ${{ env.PRD_BRANCH }}
+                  DEV_ENV: ${{ env.DEV_ENV }}
+                  STG_ENV: ${{ env.STG_ENV }}
+                  PRD_ENV: ${{ env.PRD_ENV }}
+
+            - name: Set deployment status to success
+              id: successful_deployment
+              uses: octokit/request-action@v2.x
+              with:
+                  route: POST /repos/{repository}/deployments/{deployment}/statuses
+                  repository: ${{ github.repository }}
+                  deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+                  environment: ${{ github.ref_name == 'main' && 'production' || github.ref_name }}
+                  log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  description: Deployed ${{ github.sha }} to the ${{ github.ref_name }} environment.
+                  state: success
+                  required_contexts: "[]"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+            - name: Set deployment status to failure
+              id: failed_deployment
+              uses: octokit/request-action@v2.x
+              if: failure()
+              with:
+                  route: POST /repos/{repository}/deployments/{deployment}/statuses
+                  repository: ${{ github.repository }}
+                  deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+                  environment: ${{ github.ref_name == 'main' && 'production' || github.ref_name }}
+                  log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  state: failure
+                  required_contexts: "[]"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

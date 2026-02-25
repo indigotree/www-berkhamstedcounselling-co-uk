@@ -1,0 +1,136 @@
+{
+    "name": "indigotree/platform-skeleton",
+    "description": "Indigo Tree's WordPress development platform",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Indigo Tree",
+            "email": "hello@indigotree.co.uk",
+            "homepage": "https://indigotree.co.uk"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.com/indigotree/"
+        },
+        {
+            "type": "composer",
+            "url": "https://satispress.indigotree.dev/satispress/"
+        },
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "IndigoTree\\Site\\": "wp-content/plugins/indigotree-site-core/"
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "require": {
+        "composer/installers": ">1.0",
+        "filter-agency/filter-ai": "*",
+        "indigotree-satispress/accessibility-checker": "*",
+        "indigotree-satispress/accessibility-checker-audit-history": "*",
+        "indigotree-satispress/accessibility-checker-pro": "*",
+        "indigotree-satispress/force-autoupdates": "*",
+        "indigotree-satispress/gravityforms": "*",
+        "indigotree-satispress/perfmatters": "^2.5",
+        "indigotree-satispress/searchwp": "*",
+        "indigotree-satispress/wp-schema-pro": "*",
+        "indigotree/indigotree": "^1.4",
+        "indigotree/indigotree-block-advanced-query-loop": "^1.0",
+        "indigotree/indigotree-block-animated-counter": "^1.0",
+        "indigotree/indigotree-block-carousel": "^1.0",
+        "indigotree/indigotree-block-countdown": "^1.0",
+        "indigotree/indigotree-block-google-map": "^1.0",
+        "indigotree/indigotree-block-meta-data": "^1.0",
+        "indigotree/indigotree-block-navigation-menu": "^1.0",
+        "indigotree/indigotree-block-reading-time": "^1.0",
+        "indigotree/indigotree-block-static-block": "^1.0",
+        "indigotree/indigotree-block-table-of-contents": "^1.0",
+        "indigotree/indigotree-block-tabs": "^1.0",
+        "indigotree/indigotree-block-timeline": "^1.0",
+        "indigotree/indigotree-block-tweaks": "^1.0",
+        "indigotree/platform-core": "~0.2",
+        "indigotree/platform-installer": "~0.2",
+        "indigotree/platform-module-search": "~0.3",
+        "indigotree/platform-module-security": "~0.3",
+        "indigotree/platform-module-seo": "~2.0",
+        "oomphinc/composer-installers-extender": "^2.0",
+        "wpackagist-plugin/abbreviation-button-for-the-block-editor": "*",
+        "wpackagist-plugin/accessibility-new-window-warnings": "*",
+        "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "*",
+        "wpackagist-plugin/ai-services": "*",
+        "wpackagist-plugin/antispam-bee": "*",
+        "wpackagist-plugin/auto-sizes": "*",
+        "wpackagist-plugin/cimo-image-optimizer": "*",
+        "wpackagist-plugin/dominant-color-images": "*",
+        "wpackagist-plugin/duplicate-post": "*",
+        "wpackagist-plugin/lang-attribute": "*",
+        "wpackagist-plugin/megamenu": "*",
+        "wpackagist-plugin/query-loop-load-more": "*",
+        "wpackagist-plugin/safe-svg": "*",
+        "wpackagist-plugin/social-sharing-block": "*",
+        "wpackagist-plugin/stream": "*",
+        "wpackagist-plugin/user-switching": "*",
+        "wpackagist-plugin/view-transitions": "*",
+        "wpackagist-plugin/webp-uploads": "*",
+        "wpackagist-plugin/who-inline-quote-format": "*",
+        "wpackagist-plugin/wordpress-seo": "*",
+        "wpackagist-plugin/worker": "*",
+        "wpackagist-plugin/wp-2fa": "*",
+        "wpackagist-plugin/wp-mail-logging": "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "config": {
+        "autoloader-suffix": "itd",
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "vendor-dir": "wp-content/platform/vendor",
+        "bin-dir": "{$vendor-dir}/bin",
+        "platform": {
+            "php": "8.2"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "indigotree/platform-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
+    "scripts": {
+        "lint": "find wp-content/plugins/indigotree-site-* wp-content/themes/indigotree-* -type f -name '*.php' | xargs -P 10 -n 1 php -l"
+    },
+    "scripts-descriptions": {
+        "lint": "Test PHP files for syntax errors."
+    },
+    "extra": {
+        "phpcodesniffer-search-depth": 7,
+        "installer-types": [
+            "wordpress-plugin",
+            "wordpress-muplugin",
+            "wordpress-dropin",
+            "wordpress-theme"
+        ],
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": [
+                "type:wordpress-plugin"
+            ],
+            "wp-content/mu-plugins/{$name}/": [
+                "type:wordpress-muplugin"
+            ],
+            "wp-content/{$name}/": [
+                "type:wordpress-dropin"
+            ],
+            "wp-content/themes/{$name}/": [
+                "type:wordpress-theme"
+            ]
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Small",
+	"slug": "small",
+	"blockTypes": ["core/search"],
+	"styles": {
+		"css": " .wp-block-search__inside-wrapper{ height: 40px; } & .wp-block-search__input{} & .wp-block-search__input::placeholder{} & .wp-block-search__button { padding: 0; } & .wp-block-search__button svg { padding: 0; width: 20px; height: 20px; } & .wp-block-search__button svg path {}",
+		"color": {},
+		"elements": {
+			"link": {
+				"color": {}
+			},
+			"button": {},
+			"input": {}
+		},
+		"spacing": {
+			"padding": {}
+		},
+		"typography": {
+			"fontSize": "inherit"
+		}
+	}
+}

@@ -1,0 +1,87 @@
+# Composer and NPM.
+wp-content/platform/vendor
+node_modules/
+
+# Large/disallowed file types - a CDN should be used for these.
+*.hqx
+*.bin
+*.exe
+*.dll
+*.deb
+*.dmg
+*.iso
+*.img
+*.msi
+*.msp
+*.msm
+*.mid
+*.midi
+*.kar
+*.mp3
+*.ogg
+*.m4a
+*.ra
+*.3gpp
+*.3gp
+*.mp4
+*.mpeg
+*.mpg
+*.mov
+*.webm
+*.flv
+*.m4v
+*.mng
+*.asx
+*.asf
+*.wmv
+*.avi
+
+# Misc.
+/.htaccess
+/.env
+/.idea
+/studio.json
+
+# WP Engine specific
+.smushit-status
+
+# WordPress.
+/.htaccess
+/index.php
+/license.txt
+/readme.html
+wp-admin/
+wp-includes/
+/wp-*.php
+/xmlrpc.php
+
+# Our stuff.
+wp-content/*
+!wp-content/mu-plugins/
+!wp-content/plugins/
+!wp-content/themes/
+
+wp-content/mu-plugins/*
+!wp-content/mu-plugins/indigotree-*
+!wp-content/mu-plugins/indigotree-*/*
+
+wp-content/plugins/*
+wp-content/plugins/indigotree-*
+wp-content/plugins/indigotree-*/*
+!wp-content/plugins/indigotree-site-*
+!wp-content/plugins/indigotree-site-*/*
+
+wp-content/themes/*
+!wp-content/themes/indigotree-theme-2025/
+!wp-content/themes/indigotree-theme-2025/*
+wp-content/themes/indigotree-theme-2025/build/
+wp-content/themes/indigotree-theme-2025/build/*
+
+# Make sure this is always ignored.
+.DS_Store
+.svn
+.cvs
+*.bak
+*.swp
+Thumbs.db
+local-xdebuginfo.php

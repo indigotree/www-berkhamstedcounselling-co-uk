@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Transparent",
+	"slug": "transparent",
+	"blockTypes": ["core/search"],
+	"styles": {
+		"css": " .wp-block-search__inside-wrapper{border: none; border-radius: 25px; background: rgba(255, 255, 255, 0.50); padding: 15px 15px 16px 15px; width: 193px; } & .wp-block-search__input{background:none; color: black; font-size: 16px; font-weight: 700; height: 16px; margin: auto;} & .wp-block-search__input::placeholder{color: black;} & .wp-block-search__button {padding: 0; border: none; box-shadow: none;} & .wp-block-search__button svg {fill: black !important; stroke-width: 2; transform: rotate(280deg); min-width: 15px !important; width: 15px !important;} & .wp-block-search__button svg path {stroke: black; stroke-width: 2;}",
+		"color": {
+			"background": "transparent",
+			"text": "#505050"
+		},
+		"elements": {
+			"link": {
+				"color": {
+					"text": "#0073aa"
+				}
+			},
+			"button": {
+				"color": {
+					"background": "transparent",
+					"text": "#505050"
+				},
+				"border": "none"
+			},
+			"input": {
+				"color": {
+					"background": "transparent"
+				}
+			}
+		},
+		"spacing": {
+			"padding": {
+				"top": "0",
+				"right": "0",
+				"bottom": "0",
+				"left": "0"
+			}
+		},
+		"typography": {
+			"fontSize": "inherit"
+		}
+	}
+}

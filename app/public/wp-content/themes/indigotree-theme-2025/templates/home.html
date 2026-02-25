@@ -1,0 +1,47 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","metadata":{"name":"Main"},"className":"site-main","layout":{"type":"default"}} -->
+<main id="site-main" class="wp-block-group site-main"><!-- wp:group {"metadata":{"name":"Main Inner"},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:cover {"isUserOverlayColor":true,"minHeight":300,"gradient":"primary-to-black-vertical-bottom","metadata":{"name":"Banner"},"align":"full","layout":{"type":"constrained"}} -->
+<div class="wp-block-cover alignfull" style="min-height:300px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim has-background-gradient has-primary-to-black-vertical-bottom-gradient-background"></span><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"center","level":1} -->
+<h1 class="wp-block-heading has-text-align-center">Posts</h1>
+<!-- /wp:heading --></div></div>
+<!-- /wp:cover -->
+
+<!-- wp:group {"metadata":{"name":"Breadcrumbs"},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:yoast-seo/breadcrumbs /--></div>
+<!-- /wp:group -->
+
+<!-- wp:query {"queryId":1,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true,"taxQuery":null,"parents":[],"format":[]}} -->
+<div class="wp-block-query"><!-- wp:post-template {"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":null}} -->
+<!-- wp:post-featured-image {"isLink":true} /-->
+
+<!-- wp:post-title {"isLink":true} /-->
+
+<!-- wp:post-date /-->
+
+<!-- wp:post-terms {"term":"category"} /-->
+
+<!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"excerptLength":15} /-->
+
+<!-- wp:read-more /-->
+<!-- /wp:post-template -->
+
+<!-- wp:query-pagination -->
+<!-- wp:query-pagination-previous /-->
+
+<!-- wp:query-pagination-numbers /-->
+
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+
+<!-- wp:query-no-results -->
+<!-- wp:paragraph {"placeholder":"Add text or blocks that will display when a query returns no results."} -->
+<p>No more results to show.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query --></div>
+<!-- /wp:group --></main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

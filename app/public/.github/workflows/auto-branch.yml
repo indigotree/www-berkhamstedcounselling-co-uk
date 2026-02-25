@@ -1,0 +1,135 @@
+name: Auto PR to Staging and Main
+
+on:
+    pull_request:
+        branches:
+            - develop
+        types:
+            - opened
+            - closed
+
+jobs:
+    create-prs:
+        if: github.event.action != 'closed'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Fetch all branches
+              run: |
+                  git fetch --all
+                  git branch -a
+
+            - name: Check if staging branch exists
+              id: check_staging
+              run: |
+                  if git show-ref --verify --quiet refs/remotes/origin/staging; then
+                    echo "Branch exists, proceeding"
+                    echo "STAGING_EXISTS=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Staging branch does not exist, skipping PR creation"
+                    echo "STAGING_EXISTS=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Check if main branch exists
+              id: check_main
+              run: |
+                  if git show-ref --verify --quiet refs/remotes/origin/main; then
+                    echo "Branch exists, proceeding"
+                    echo "MAIN_EXISTS=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Main branch does not exist, skipping PR creation"
+                    echo "MAIN_EXISTS=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Check if PR exists for Staging
+              if: steps.check_staging.outputs.STAGING_EXISTS == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  EXISTS=$(gh pr list --base staging --head "${{ github.head_ref }}" --json number --jq 'length' --repo ${{ github.repository }})
+                  if [ "$EXISTS" -eq "0" ]; then
+                    PR_TITLE="${{ github.event.pull_request.title }} [Staging]"
+                    PR_BODY="${{ github.event.pull_request.body }}"
+                    gh pr create --base staging --head "${{ github.head_ref }}" --title "$PR_TITLE" --body "$PR_BODY" --repo ${{ github.repository }}
+                  fi
+
+            - name: Check if PR exists for Main
+              if: steps.check_main.outputs.MAIN_EXISTS == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  EXISTS=$(gh pr list --base main --head "${{ github.head_ref }}" --json number --jq 'length' --repo ${{ github.repository }})
+                  if [ "$EXISTS" -eq "0" ]; then
+                    PR_TITLE="${{ github.event.pull_request.title }} [Main]"
+                    PR_BODY="${{ github.event.pull_request.body }}"
+                    gh pr create --base main --head "${{ github.head_ref }}" --title "$PR_TITLE" --body "$PR_BODY" --repo ${{ github.repository }}
+                  fi
+
+    auto-review:
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Fetch all branches
+              run: |
+                  git fetch --all
+                  git branch -a
+
+            - name: Check if staging branch exists
+              id: check_staging
+              run: |
+                  if git show-ref --verify --quiet refs/remotes/origin/staging; then
+                    echo "Branch exists, proceeding"
+                    echo "STAGING_EXISTS=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Staging branch does not exist, skipping PR approval"
+                    echo "STAGING_EXISTS=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Check if main branch exists
+              id: check_main
+              run: |
+                  if git show-ref --verify --quiet refs/remotes/origin/main; then
+                    echo "Branch exists, proceeding"
+                    echo "MAIN_EXISTS=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Main branch does not exist, skipping PR approval"
+                    echo "MAIN_EXISTS=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Generate GitHub App token
+              id: generate_token
+              uses: tibdex/github-app-token@v1
+              with:
+                  app_id: ${{ secrets.GH_BRANCHGUARD_APP_ID }}
+                  private_key: ${{ secrets.GH_BRANCHGUARD_PRIVATE_KEY }}
+
+            - name: Approve Staging PR
+              if: steps.check_staging.outputs.STAGING_EXISTS == 'true'
+              env:
+                  GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+              run: |
+                  PR_NUMBER=$(gh pr list --base staging --head "${{ github.head_ref }}" --json number --jq '.[0].number' --repo ${{ github.repository }})
+                  if [ -n "$PR_NUMBER" ]; then
+                    gh pr review $PR_NUMBER --approve --repo ${{ github.repository }}
+                    echo "Approved PR #$PR_NUMBER for staging."
+                  fi
+
+            - name: Approve Main PR
+              if: steps.check_main.outputs.MAIN_EXISTS == 'true'
+              env:
+                  GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+              run: |
+                  PR_NUMBER=$(gh pr list --base main --head "${{ github.head_ref }}" --json number --jq '.[0].number' --repo ${{ github.repository }})
+                  if [ -n "$PR_NUMBER" ]; then
+                    gh pr review $PR_NUMBER --approve --repo ${{ github.repository }}
+                    echo "Approved PR #$PR_NUMBER for main."
+                  fi

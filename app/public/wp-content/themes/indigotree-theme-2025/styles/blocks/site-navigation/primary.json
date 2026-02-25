@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Primary",
+	"slug": "primary",
+	"default": true,
+	"blockTypes": [ "indigotree/navigation-menu" ],
+	"styles": {
+		"css": " .wp-block-indigotree-navigation-menu-container li > a {font-size: 16px; color: #505050 !important;} & .navigation-menu__menu {gap: 24px !important;}",
+		"color": {
+			"text": "#505050"
+		},
+		"typography": {
+			"fontSize": "16px"
+		}
+	}
+}

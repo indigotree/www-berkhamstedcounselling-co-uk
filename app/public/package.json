@@ -1,0 +1,41 @@
+{
+	"name": "@indigotree/theme-2025",
+	"private": true,
+	"version": "1.0.0",
+	"author": "Indigo Tree <hello@indigotree.co.uk>",
+	"license": "UNLICENSED",
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"scripts": {
+		"build:theme": "wp-scripts build",
+		"watch:theme": "wp-scripts start",
+		"build": "wp-scripts build",
+		"format": "wp-scripts format",
+		"lint:style": "wp-scripts lint-style 'wp-content/plugins/indigotree-site-*/**/*.css' 'wp-content/themes/indigotree-theme-2025/**/*.css'",
+		"lint:js": "wp-scripts lint-js 'wp-content/plugins/indigotree-site-*/**/*.js' 'wp-content/themes/indigotree-theme-2025/assets/js/**/*.js'",
+		"lint:md:docs": "wp-scripts lint-md-docs './README.md'",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"start": "wp-scripts start"
+	},
+	"devDependencies": {
+		"@wordpress/block-editor": "^15.5.0",
+		"@wordpress/blocks": "^15.5.0",
+		"@wordpress/components": "^30.5.0",
+		"@wordpress/compose": "^7.32.0",
+		"@wordpress/core-data": "^7.32.0",
+		"@wordpress/data": "^10.32.0",
+		"@wordpress/date": "^5.32.0",
+		"@wordpress/editor": "^14.32.0",
+		"@wordpress/element": "^6.32.0",
+		"@wordpress/hooks": "^4.32.0",
+		"@wordpress/i18n": "^6.5.0",
+		"@wordpress/icons": "^10.32.0",
+		"@wordpress/plugins": "^7.32.0",
+		"@wordpress/scripts": "^30.25.0",
+		"match-sorter": "^8.0.3",
+		"path": "^0.12.7",
+		"webpack-remove-empty-scripts": "^1.0.4"
+	}
+}

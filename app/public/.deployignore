@@ -1,0 +1,45 @@
+# See also https://github.com/wpengine/github-action-wpe-site-deploy/blob/main/exclude.txt
+
+# Raw theme assets - duplicated on purpose
+/wp-content/themes/indigotree-theme-*/assets/js
+/wp-content/themes/indigotree-theme-*/assets/sass
+themes/indigotree-theme-*/assets/js
+themes/indigotree-theme-*/assets/sass
+
+# Raw plugin assets - duplicated on purpose
+/wp-content/platform/vendor/indigotree/platform-core/assets/js
+/wp-content/platform/vendor/indigotree/platform-core/assets/css
+/wp-content/platform/vendor/indigotree/platform-module-*/assets/js
+/wp-content/platform/vendor/indigotree/platform-module-*/assets/css
+platform/vendor/indigotree/platform-core/assets/js
+platform/vendor/indigotree/platform-core/assets/css
+platform/vendor/indigotree/platform-module-*/assets/js
+platform/vendor/indigotree/platform-module-*/assets/css
+/wp-content/plugins/indigotree-site-*/node_modules
+plugins/indigotree-site-*/node_modules
+
+# Misc files in the root.
+/*.md
+/phpcs.xml.dist
+/studio.json
+/webpack.config.js
+
+# Composer and NPM.
+composer.*
+node_modules/
+package.json
+package-lock.json
+
+# Make sure this is always ignored.
+.cvs
+.DS_Store
+.git
+.gitattributes
+.gitignore
+.svn
+.vscode
+.*
+*.bak
+*.swp
+Thumbs.db
+renovate.json
