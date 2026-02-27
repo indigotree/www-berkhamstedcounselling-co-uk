@@ -1,3 +1,17 @@
 /* stylelint-disable-next-line block-no-empty */
-html {
+
+.gform_wrapper .gform_footer .gform_button,
+.gform_wrapper .gform_footer .gform_next_button,
+.gform_wrapper .gform_footer .gform_previous_button {
+	background: #a9325a !important;
+	color: #fff !important;
+	border: 2px solid #a9325a !important;
+	border-radius: 0 !important;
+}
+
+.gform_wrapper .gform_footer .gform_button:hover,
+.gform_wrapper .gform_footer .gform_next_button:hover,
+.gform_wrapper .gform_footer .gform_previous_button:hover {
+	background: transparent !important;
+	color: #a9325a !important;
 }
