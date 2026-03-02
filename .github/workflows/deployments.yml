@@ -17,11 +17,6 @@ env:
     STG_ENV: berkhamcounsstg
     PRD_ENV: berkhamcouns
 
-permissions:
-    contents: write
-    deployments: write
-    statuses: write
-
 jobs:
     check-project:
         name: Pre-deploy checks
@@ -75,6 +70,19 @@ jobs:
             - name: Build assets
               run: npm run build
 
+            - name: Set WPE_ENV from target branch
+              run: |
+                TARGET="${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}"
+                if [ "$TARGET" = "${{ env.DEV_BRANCH }}" ]; then
+                  echo "WPE_ENV=${{ env.DEV_ENV }}" >> $GITHUB_ENV
+                elif [ "$TARGET" = "${{ env.STG_BRANCH }}" ]; then
+                  echo "WPE_ENV=${{ env.STG_ENV }}" >> $GITHUB_ENV
+                elif [ "$TARGET" = "${{ env.PRD_BRANCH }}" ]; then
+                  echo "WPE_ENV=${{ env.PRD_ENV }}" >> $GITHUB_ENV
+                else
+                  echo "WPE_ENV=example" >> $GITHUB_ENV
+                fi
+
             - name: Create release on Github
               id: create_deployment
               uses: octokit/request-action@v2.x
@@ -104,16 +112,17 @@ jobs:
                   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Deploy plugins
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.3
+              uses: wpengine/github-action-wpe-site-deploy@v3
               with:
                   # Deploy vars
                   CACHE_CLEAR: FALSE
                   FLAGS: "-azvr --inplace --verbose --ignore-existing --exclude-from=.deployignore"
                   WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+                  WPE_ENV: ${{ env.WPE_ENV }}
 
                   # PATHS:
-                  TPO_SRC_PATH: "wp-content/plugins"
-                  TPO_PATH: "wp-content"
+                  SRC_PATH: "wp-content/plugins"
+                  REMOTE_PATH: "wp-content"
 
                   # Branches & environments
                   DEV_BRANCH: ${{ env.DEV_BRANCH }}
@@ -124,16 +133,17 @@ jobs:
                   PRD_ENV: ${{ env.PRD_ENV }}
 
             - name: Deploy (modules)
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.3
+              uses: wpengine/github-action-wpe-site-deploy@v3
               with:
                   # Deploy vars
                   CACHE_CLEAR: FALSE
                   FLAGS: "-azvr --inplace --verbose --delete --delete-delay --exclude-from=.deployignore"
                   WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+                  WPE_ENV: ${{ env.WPE_ENV }}
 
                   # PATHS:
-                  TPO_SRC_PATH: "wp-content/platform"
-                  TPO_PATH: "wp-content"
+                  SRC_PATH: "wp-content/platform"
+                  REMOTE_PATH: "wp-content"
 
                   # Branches & environments
                   DEV_BRANCH: ${{ env.DEV_BRANCH }}
@@ -144,10 +154,10 @@ jobs:
                   PRD_ENV: ${{ env.PRD_ENV }}
 
             - name: Deploy (theme, and everything else)
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.3
+              uses: wpengine/github-action-wpe-site-deploy@v3
               with:
                   # Deploy vars
-                  CACHE_CLEAR: FALSE
+                  CACHE_CLEAR: TRUE
                   FLAGS: >-
                       -azvr --inplace --verbose
                       --exclude-from=.deployignore
@@ -167,9 +177,11 @@ jobs:
                       --include='/wp-content/themes/indigotree-theme-2025/***'
                       --exclude='/wp-content/themes/*'
                   WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+                  WPE_ENV: ${{ env.WPE_ENV }}
+
                   # PATHS:
-                  TPO_SRC_PATH: "."
-                  TPO_PATH: ""
+                  SRC_PATH: "."
+                  REMOTE_PATH: ""
 
                   # Branches & environments
                   DEV_BRANCH: ${{ env.DEV_BRANCH }}
