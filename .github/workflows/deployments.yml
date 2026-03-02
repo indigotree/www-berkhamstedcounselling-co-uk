@@ -17,6 +17,9 @@ env:
     STG_ENV: berkhamcounsstg
     PRD_ENV: berkhamcouns
 
+permissions:
+    contents: write
+
 jobs:
     check-project:
         name: Pre-deploy checks
