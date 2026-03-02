@@ -19,6 +19,8 @@ env:
 
 permissions:
     contents: write
+    deployments: write
+    statuses: write
 
 jobs:
     check-project:
