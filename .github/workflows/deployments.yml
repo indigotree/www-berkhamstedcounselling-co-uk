@@ -104,7 +104,7 @@ jobs:
                   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Deploy plugins
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.1
+              uses: indigotree/github-action-deploy-to-wpe@v0.5.2
               with:
                   # Deploy vars
                   CACHE_CLEAR: FALSE
@@ -124,7 +124,7 @@ jobs:
                   PRD_ENV: ${{ env.PRD_ENV }}
 
             - name: Deploy (modules)
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.1
+              uses: indigotree/github-action-deploy-to-wpe@v0.5.2
               with:
                   # Deploy vars
                   CACHE_CLEAR: FALSE
@@ -144,7 +144,7 @@ jobs:
                   PRD_ENV: ${{ env.PRD_ENV }}
 
             - name: Deploy (theme, and everything else)
-              uses: indigotree/github-action-deploy-to-wpe@v0.5.1
+              uses: indigotree/github-action-deploy-to-wpe@v0.5.2
               with:
                   # Deploy vars
                   CACHE_CLEAR: FALSE
