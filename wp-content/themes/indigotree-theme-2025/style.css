@@ -5,3 +5,19 @@
  * Text Domain: indigotree-theme-2025
  * Version: 2025.0.0
  */
+
+.gform_wrapper .gform_footer .gform_button,
+.gform_wrapper .gform_footer .gform_next_button,
+.gform_wrapper .gform_footer .gform_previous_button {
+	background: #a9325a;
+	color: #fff;
+	border: 2px solid #a9325a;
+	border-radius: 0;
+}
+
+.gform_wrapper .gform_footer .gform_button:hover,
+.gform_wrapper .gform_footer .gform_next_button:hover,
+.gform_wrapper .gform_footer .gform_previous_button:hover {
+	background: transparent;
+	color: #a9325a;
+}
