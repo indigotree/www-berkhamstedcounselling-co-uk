@@ -3,9 +3,9 @@
 .gform_wrapper .gform_button,
 .gform_wrapper .gform_next_button,
 .gform_wrapper .gform_previous_button {
-	background: #a9325a !important;
+	background: var(--wp--preset--color--custom-rose-bloom) !important;
 	color: #fff !important;
-	border: 2px solid #a9325a !important;
+	border: 2px solid var(--wp--preset--color--custom-rose-bloom) !important;
 	border-radius: 0 !important;
 }
 
@@ -13,5 +13,9 @@
 .gform_wrapper .gform_next_button:hover,
 .gform_wrapper .gform_previous_button:hover {
 	background: transparent !important;
-	color: #a9325a !important;
+	color: var(--wp--preset--color--custom-rose-bloom) !important;
+}
+
+.wp-block-button__link:hover {
+	color: var(--wp--preset--color--custom-rose-bloom) !important;
 }
