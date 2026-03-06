@@ -20,6 +20,11 @@
 	color: var(--wp--preset--color--custom-rose-bloom) !important;
 }
 
+:root
+	:where(.wp-block-button.is-style-outline--2 .wp-block-button__link:hover) {
+	color: var(--wp--preset--color--white) !important;
+}
+
 .wp-block-read-more {
 	background: var(--wp--preset--color--custom-rose-bloom) !important;
 	color: #fff !important;
