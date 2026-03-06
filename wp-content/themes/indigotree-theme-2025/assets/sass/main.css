@@ -20,8 +20,8 @@
 	color: var(--wp--preset--color--custom-rose-bloom);
 }
 
-:where(.wp-block-button.is-style-outline--2 .wp-block-button__link:hover) {
-	color: var(--wp--preset--color--white);
+.wp-block-button.is-style-outline--2 .wp-block-button__link:hover {
+	color: var(--wp--custom--global-button--hover--color--background) !important;
 }
 
 .wp-block-read-more {
