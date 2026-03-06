@@ -19,3 +19,15 @@
 .wp-block-button__link:hover {
 	color: var(--wp--preset--color--custom-rose-bloom) !important;
 }
+
+.wp-block-read-more {
+	background: var(--wp--preset--color--custom-rose-bloom) !important;
+	color: #fff !important;
+	border: 2px solid var(--wp--preset--color--custom-rose-bloom) !important;
+	border-radius: 0 !important;
+}
+
+.wp-block-read-more:hover {
+	background: transparent !important;
+	color: var(--wp--preset--color--custom-rose-bloom) !important;
+}
